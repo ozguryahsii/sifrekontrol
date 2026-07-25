@@ -48,8 +48,8 @@ sifrekontrol check --json
 # Veri seti durumu
 sifrekontrol status
 
-# API + basit yerleşik arayüz: http://127.0.0.1:3002 (yalnızca bu makine)
-sifrekontrol serve --port 3002
+# Analiz API'si + basit yerleşik arayüz: http://127.0.0.1:3003 (yalnızca bu makine)
+sifrekontrol serve
 
 # 3) Veri setini güncelle (artımlı — aşağıya bakın)
 sifrekontrol update
@@ -61,19 +61,21 @@ Premium SaaS görünümlü asıl arayüz `frontend/` altındadır ve Python API'
 kullanır. İki terminalde:
 
 ```bash
-# Terminal 1 — analiz motoru (API)
-sifrekontrol serve --port 3002
+# Terminal 1 — analiz motoru (API, port 3003)
+sifrekontrol serve
 
-# Terminal 2 — dashboard
+# Terminal 2 — dashboard (port 3002)
 cd frontend
 npm install          # bir kerelik
-npm run dev          # → http://localhost:3000
+npm run dev          # → http://localhost:3002
 ```
 
-Üretim için: `npm run build && npm start`. API farklı bir portta çalışıyorsa
-`SIFREKONTROL_API=http://127.0.0.1:<port>` ortam değişkeniyle belirtin.
-Dashboard da yalnızca localhost'a konuşur; şifre `/api/check`'e POST gövdesiyle
-gider ve makine dışına çıkmaz.
+Üretim için: `npm run build && npm start`. Port düzeni: **3002 = tarayıcıda
+açılan dashboard, 3003 = arka plandaki analiz API'si.** API farklı bir portta
+çalışıyorsa `SIFREKONTROL_API=http://127.0.0.1:<port>` ortam değişkeniyle,
+dashboard portu da `npm run dev -- -p <port>` ile değiştirilebilir. Dashboard
+yalnızca localhost'a konuşur; şifre `/api/check`'e POST gövdesiyle gider ve
+makine dışına çıkmaz.
 
 Stack: Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui tarzı komponent
 mimarisi + Motion animasyonları + Lucide ikonları + Recharts grafikleri.

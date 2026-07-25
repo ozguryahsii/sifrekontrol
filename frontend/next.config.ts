@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const API_URL = process.env.SIFREKONTROL_API ?? "http://127.0.0.1:3002";
+const API_URL = process.env.SIFREKONTROL_API ?? "http://127.0.0.1:3003";
 
 const nextConfig: NextConfig = {
   async rewrites() {

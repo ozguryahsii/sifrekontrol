@@ -156,8 +156,8 @@ def main(argv: Optional[list] = None) -> int:
     p_up.add_argument("--workers", type=int, default=32, help="eşzamanlı istek sayısı")
     p_up.set_defaults(func=cmd_update)
 
-    p_sv = sub.add_parser("serve", help="Lokal web arayüzünü başlat (varsayılan port 3002)")
-    p_sv.add_argument("--port", type=int, default=3002, help="port (varsayılan: %(default)s)")
+    p_sv = sub.add_parser("serve", help="Analiz API'sini başlat (varsayılan port 3003)")
+    p_sv.add_argument("--port", type=int, default=3003, help="port (varsayılan: %(default)s)")
     p_sv.add_argument(
         "--host", default="127.0.0.1",
         help="bağlanılacak adres (varsayılan: %(default)s — yalnızca bu makine)",

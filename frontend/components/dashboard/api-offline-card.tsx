@@ -20,7 +20,7 @@ export function ApiOfflineCard({ onRetry }: { onRetry: () => void }) {
       </div>
       <code className="flex items-center gap-2 rounded-xl bg-secondary/70 px-4 py-2.5 font-mono text-xs">
         <TerminalSquare className="h-4 w-4 text-accent" />
-        sifrekontrol serve --port 3002
+        sifrekontrol serve --port 3003
       </code>
       <Button variant="outline" size="sm" onClick={onRetry}>
         <RefreshCw /> Tekrar dene

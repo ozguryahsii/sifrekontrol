@@ -199,7 +199,7 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(200, run_check_payload(password, self.data_dir))
 
 
-def serve(data_dir: Path, port: int = 3002, host: str = "127.0.0.1") -> Tuple[str, int]:
+def serve(data_dir: Path, port: int = 3003, host: str = "127.0.0.1") -> Tuple[str, int]:
     """Web arayüzünü başlatır (bloklar). Yalnızca loopback'e bağlanır."""
     handler = type("BoundHandler", (Handler,), {"data_dir": Path(data_dir)})
     httpd = ThreadingHTTPServer((host, port), handler)
