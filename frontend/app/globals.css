@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Tema değişkenleri (tek kaynak) ─────────────────────────────── */
+@layer base {
+  :root {
+    --background: 220 25% 97%;
+    --foreground: 228 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 228 30% 10%;
+    --primary: 252 85% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 20% 92%;
+    --secondary-foreground: 228 30% 14%;
+    --muted: 220 20% 93%;
+    --muted-foreground: 228 12% 42%;
+    --accent: 190 90% 45%;
+    --accent-foreground: 0 0% 100%;
+    --success: 152 65% 40%;
+    --warning: 38 92% 50%;
+    --danger: 350 82% 55%;
+    --border: 224 18% 88%;
+    --input: 224 18% 84%;
+    --ring: 252 85% 60%;
+    --chart-1: 252 85% 62%;
+    --chart-2: 190 90% 48%;
+    --chart-3: 152 65% 44%;
+    --chart-4: 38 92% 54%;
+    --chart-5: 350 82% 58%;
+    --radius: 0.75rem;
+    --glass: 0 0% 100% / 0.62;
+  }
+
+  .dark {
+    --background: 230 32% 5%;
+    --foreground: 220 25% 93%;
+    --card: 229 28% 8%;
+    --card-foreground: 220 25% 93%;
+    --primary: 253 90% 68%;
+    --primary-foreground: 230 32% 6%;
+    --secondary: 229 22% 13%;
+    --secondary-foreground: 220 25% 90%;
+    --muted: 229 22% 13%;
+    --muted-foreground: 224 14% 62%;
+    --accent: 190 95% 55%;
+    --accent-foreground: 230 32% 6%;
+    --success: 152 70% 46%;
+    --warning: 40 95% 58%;
+    --danger: 350 90% 62%;
+    --border: 228 20% 17%;
+    --input: 228 20% 20%;
+    --ring: 253 90% 68%;
+    --chart-1: 253 90% 70%;
+    --chart-2: 190 95% 58%;
+    --chart-3: 152 70% 50%;
+    --chart-4: 40 95% 60%;
+    --chart-5: 350 90% 66%;
+    --glass: 229 28% 9% / 0.55;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* ─── Yardımcı yüzeyler ──────────────────────────────────────────── */
+@layer components {
+  /* Glassmorphism kart yüzeyi */
+  .glass {
+    background: hsl(var(--glass));
+    @apply backdrop-blur-xl border border-white/[0.06];
+  }
+
+  /* Gradient kenarlıklı kart: iç yüzey + 1px gradient çerçeve */
+  .gradient-border {
+    position: relative;
+    background-clip: padding-box;
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      hsl(var(--primary) / 0.55),
+      transparent 30%,
+      transparent 65%,
+      hsl(var(--accent) / 0.45)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Yumuşak parıltı gölgesi */
+  .glow-primary {
+    box-shadow: 0 0 60px -18px hsl(var(--primary) / 0.5);
+  }
+  .glow-danger {
+    box-shadow: 0 0 60px -18px hsl(var(--danger) / 0.55);
+  }
+  .glow-success {
+    box-shadow: 0 0 60px -18px hsl(var(--success) / 0.5);
+  }
+
+  /* Arkaplan: nokta ızgarası + radyal degrade aurası */
+  .bg-aurora {
+    background-image:
+      radial-gradient(ellipse 60% 45% at 18% -8%, hsl(var(--primary) / 0.16), transparent),
+      radial-gradient(ellipse 45% 35% at 92% 0%, hsl(var(--accent) / 0.1), transparent);
+  }
+  .bg-dot-grid {
+    background-image: radial-gradient(hsl(var(--foreground) / 0.07) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+}
+
+/* Recharts yüzeylerini temaya uydur */
+.recharts-default-tooltip {
+  border-radius: 12px !important;
+}

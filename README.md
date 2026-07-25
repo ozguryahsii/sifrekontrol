@@ -48,12 +48,39 @@ sifrekontrol check --json
 # Veri seti durumu
 sifrekontrol status
 
-# Web arayüzü: http://127.0.0.1:3002 (yalnızca bu makineden erişilebilir)
+# API + basit yerleşik arayüz: http://127.0.0.1:3002 (yalnızca bu makine)
 sifrekontrol serve --port 3002
 
 # 3) Veri setini güncelle (artımlı — aşağıya bakın)
 sifrekontrol update
 ```
+
+### Modern web arayüzü (Next.js dashboard)
+
+Premium SaaS görünümlü asıl arayüz `frontend/` altındadır ve Python API'sini
+kullanır. İki terminalde:
+
+```bash
+# Terminal 1 — analiz motoru (API)
+sifrekontrol serve --port 3002
+
+# Terminal 2 — dashboard
+cd frontend
+npm install          # bir kerelik
+npm run dev          # → http://localhost:3000
+```
+
+Üretim için: `npm run build && npm start`. API farklı bir portta çalışıyorsa
+`SIFREKONTROL_API=http://127.0.0.1:<port>` ortam değişkeniyle belirtin.
+Dashboard da yalnızca localhost'a konuşur; şifre `/api/check`'e POST gövdesiyle
+gider ve makine dışına çıkmaz.
+
+Stack: Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui tarzı komponent
+mimarisi + Motion animasyonları + Lucide ikonları + Recharts grafikleri.
+Dark mode öncelikli, light tema desteklidir. Ekranlar: Genel Bakış (KPI +
+güncelleme aktivitesi + veri seti durumu), Şifre Analizi (gauge, sızıntı
+sayacı, kırılma süreleri, standart bazlı uyumluluk kartları) ve Veri Seti
+(yaşam döngüsü + CLI komutları).
 
 Veri dizini varsayılan olarak `~/.local/share/sifrekontrol`'dür;
 `--data-dir` veya `SIFREKONTROL_DATA` ortam değişkeni ile değiştirilebilir.
@@ -111,9 +138,18 @@ sifrekontrol/
   strength.py     # zxcvbn (yoksa entropi tabanlı yedek) + Türkçe çeviriler
   regulations.py  # standart bazlı kural motoru
   report.py       # terminal / JSON rapor (şifre içermez)
-  serve.py        # lokal web arayüzü (yalnızca 127.0.0.1, no-store, log'suz)
+  serve.py        # lokal API + basit yerleşik arayüz (yalnızca 127.0.0.1, no-store, log'suz)
   cli.py          # check / download / update / serve / status komutları
 tests/            # python3 -m unittest discover -s tests
+frontend/
+  app/            # Next.js sayfaları: / (genel bakış), /check, /dataset
+  components/
+    ui/           # shadcn tarzı temel bileşenler + border-beam, number-ticker
+    layout/       # sidebar, navbar, tema sağlayıcı/anahtar, sayfa kabuğu
+    dashboard/    # KPI kartı, analiz formu, sonuç özeti, regülasyon ızgarası
+    charts/       # Recharts: skor gauge, kapsam donut, alan/bar grafikleri
+  lib/            # API istemcisi, tipler, yardımcılar
+  tailwind.config.ts + app/globals.css   # merkezi tema değişkenleri
 ```
 
 Depolama düzeni: her kayıt 20 bayt SHA-1 + 4 bayt görülme sayısı. Hash'ler
