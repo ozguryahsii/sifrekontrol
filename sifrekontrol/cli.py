@@ -107,6 +107,13 @@ def cmd_update(args: argparse.Namespace) -> int:
     return _run_sync(args, "update")
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    from .serve import serve
+
+    serve(args.data_dir, port=args.port, host=args.host)
+    return 0
+
+
 def cmd_status(args: argparse.Namespace) -> int:
     st = Store(args.data_dir).status()
     gb = st["size_bytes"] / (1024**3)
@@ -148,6 +155,14 @@ def main(argv: Optional[list] = None) -> int:
     p_up = sub.add_parser("update", help="Veri setini artımlı güncelle (ETag ile)")
     p_up.add_argument("--workers", type=int, default=32, help="eşzamanlı istek sayısı")
     p_up.set_defaults(func=cmd_update)
+
+    p_sv = sub.add_parser("serve", help="Lokal web arayüzünü başlat (varsayılan port 3002)")
+    p_sv.add_argument("--port", type=int, default=3002, help="port (varsayılan: %(default)s)")
+    p_sv.add_argument(
+        "--host", default="127.0.0.1",
+        help="bağlanılacak adres (varsayılan: %(default)s — yalnızca bu makine)",
+    )
+    p_sv.set_defaults(func=cmd_serve)
 
     p_st = sub.add_parser("status", help="Lokal veri setinin durumunu göster")
     p_st.set_defaults(func=cmd_status)

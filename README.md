@@ -48,6 +48,9 @@ sifrekontrol check --json
 # Veri seti durumu
 sifrekontrol status
 
+# Web arayüzü: http://127.0.0.1:3002 (yalnızca bu makineden erişilebilir)
+sifrekontrol serve --port 3002
+
 # 3) Veri setini güncelle (artımlı — aşağıya bakın)
 sifrekontrol update
 ```
@@ -108,7 +111,8 @@ sifrekontrol/
   strength.py     # zxcvbn (yoksa entropi tabanlı yedek) + Türkçe çeviriler
   regulations.py  # standart bazlı kural motoru
   report.py       # terminal / JSON rapor (şifre içermez)
-  cli.py          # check / download / update / status komutları
+  serve.py        # lokal web arayüzü (yalnızca 127.0.0.1, no-store, log'suz)
+  cli.py          # check / download / update / serve / status komutları
 tests/            # python3 -m unittest discover -s tests
 ```
 

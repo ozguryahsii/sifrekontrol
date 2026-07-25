@@ -90,13 +90,13 @@ def render_text(
     return "\n".join(lines)
 
 
-def render_json(
+def build_payload(
     length: int,
     strength: StrengthResult,
     breach_count: Optional[int],
     regulations: List[RegulationResult],
-) -> str:
-    payload = {
+) -> dict:
+    return {
         "length": length,
         "strength": asdict(strength),
         "breach_count": breach_count,
@@ -111,4 +111,16 @@ def render_json(
             for r in regulations
         ],
     }
-    return json.dumps(payload, ensure_ascii=False, indent=2)
+
+
+def render_json(
+    length: int,
+    strength: StrengthResult,
+    breach_count: Optional[int],
+    regulations: List[RegulationResult],
+) -> str:
+    return json.dumps(
+        build_payload(length, strength, breach_count, regulations),
+        ensure_ascii=False,
+        indent=2,
+    )
