@@ -25,7 +25,7 @@ export function QuickCheckCard() {
             </p>
           </div>
         </div>
-        <Button variant="gradient" size="lg" onClick={() => router.push("/check")}>
+        <Button variant="gradient" size="lg" onClick={() => router.push("/")}>
           Analize başla <ArrowRight />
         </Button>
       </div>

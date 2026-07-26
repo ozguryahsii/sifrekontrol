@@ -20,6 +20,13 @@ export function CheckForm({
   return (
     <Card className="relative overflow-hidden p-6">
       <BorderBeam duration={11} />
+      <h2 className="text-lg font-semibold tracking-tight">
+        Şifre güvenliğini şimdi test edin
+      </h2>
+      <p className="mb-4 mt-1 text-xs leading-relaxed text-muted-foreground">
+        Güç analizi, 850M+ sızmış şifre içinde offline arama ve 6 uluslararası
+        standarda göre uyumluluk raporu — tamamı bu makinede, saniyeler içinde.
+      </p>
       <form
         onSubmit={(e) => {
           e.preventDefault();

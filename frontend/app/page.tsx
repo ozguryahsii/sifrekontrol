@@ -1,123 +1,106 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { Database, FileDigit, HardDrive, ShieldCheck } from "lucide-react";
-import { PageShell } from "@/components/layout/page-shell";
-import { KpiCard } from "@/components/dashboard/kpi-card";
-import { QuickCheckCard } from "@/components/dashboard/quick-check-card";
-import { DatasetStatusCard } from "@/components/dashboard/dataset-status-card";
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { PublicHeader } from "@/components/layout/public-header";
+import { CheckForm } from "@/components/dashboard/check-form";
+import { PrivacyStrip } from "@/components/dashboard/privacy-strip";
+import { ResultSummary } from "@/components/dashboard/result-summary";
+import { RegulationGrid } from "@/components/dashboard/regulation-grid";
+import { CheckEmptyState, CheckSkeleton } from "@/components/dashboard/check-states";
 import { ApiOfflineCard } from "@/components/dashboard/api-offline-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { UpdatesAreaChart, type UpdatePoint } from "@/components/charts/updates-area-chart";
-import { getStatus } from "@/lib/api";
-import type { DatasetStatus } from "@/lib/types";
-import { formatBytes } from "@/lib/utils";
+import { RegulationBar } from "@/components/charts/regulation-bar";
+import { checkPassword } from "@/lib/api";
+import type { CheckResult } from "@/lib/types";
 
-/**
- * Örnek senaryo verisi: günlük `sifrekontrol update` çalıştıran bir kurumda
- * değişen aralık sayısının tipik seyri. Gerçek geçmiş henüz loglanmadığı için
- * "örnek veri" rozetiyle işaretlenir.
- */
-const DEMO_UPDATE_HISTORY: UpdatePoint[] = [
-  { day: "12 Tem", changed: 18240 },
-  { day: "13 Tem", changed: 9310 },
-  { day: "14 Tem", changed: 11890 },
-  { day: "15 Tem", changed: 46520 },
-  { day: "16 Tem", changed: 22110 },
-  { day: "17 Tem", changed: 8140 },
-  { day: "18 Tem", changed: 7960 },
-  { day: "19 Tem", changed: 31770 },
-  { day: "20 Tem", changed: 15420 },
-  { day: "21 Tem", changed: 12080 },
-  { day: "22 Tem", changed: 9840 },
-  { day: "23 Tem", changed: 27310 },
-  { day: "24 Tem", changed: 13560 },
-  { day: "25 Tem", changed: 10230 },
-];
+type ViewState =
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "error" }
+  | { kind: "result"; data: CheckResult };
 
-export default function DashboardPage() {
-  const [status, setStatus] = useState<DatasetStatus | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [offline, setOffline] = useState(false);
+/** Ana sayfa: son kullanıcı için sadeleştirilmiş şifre analizi ekranı. */
+export default function HomePage() {
+  const [state, setState] = useState<ViewState>({ kind: "idle" });
 
-  const load = useCallback(() => {
-    setLoading(true);
-    setOffline(false);
-    getStatus()
-      .then(setStatus)
-      .catch(() => setOffline(true))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(load, [load]);
-
-  if (offline) {
-    return (
-      <PageShell>
-        <ApiOfflineCard onRetry={load} />
-      </PageShell>
-    );
-  }
+  const runCheck = (password: string) => {
+    setState({ kind: "loading" });
+    checkPassword(password)
+      .then((data) => setState({ kind: "result", data }))
+      .catch(() => setState({ kind: "error" }));
+  };
 
   return (
-    <PageShell>
-      <div className="space-y-6">
-        <QuickCheckCard />
+    <>
+      <PublicHeader />
+      <motion.main
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="mx-auto w-full max-w-6xl px-6 py-8 lg:px-10"
+      >
+        <div className="space-y-5">
+          <CheckForm onSubmit={runCheck} loading={state.kind === "loading"} />
+          <PrivacyStrip />
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <KpiCard
-            index={0}
-            label="Sızmış şifre kaydı"
-            icon={FileDigit}
-            value={status?.records ?? 0}
-            hint="HIBP offline veri setinde"
-            tone="primary"
-          />
-          <KpiCard
-            index={1}
-            label="Grup dosyası"
-            icon={Database}
-            value={status?.groups_present ?? 0}
-            hint={`${status?.groups_total ?? 4096} hedef`}
-            tone="accent"
-          />
-          <KpiCard
-            index={2}
-            label="Disk kullanımı"
-            icon={HardDrive}
-            valueText={status ? formatBytes(status.size_bytes) : "—"}
-            hint="Sıralı binary depo"
-            tone="warning"
-          />
-          <KpiCard
-            index={3}
-            label="Denetlenen standart"
-            icon={ShieldCheck}
-            value={6}
-            hint="NIST · PCI · OWASP · CIS · KVKK · ISO"
-            tone="success"
-          />
-        </div>
+          <AnimatePresence mode="wait">
+            {state.kind === "idle" && (
+              <motion.div key="idle" exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+                <CheckEmptyState />
+              </motion.div>
+            )}
 
-        <div className="grid gap-5 lg:grid-cols-5">
-          <Card className="lg:col-span-3">
-            <CardHeader className="flex-row items-start justify-between space-y-0">
-              <div>
-                <CardTitle>Artımlı Güncelleme Aktivitesi</CardTitle>
-                <CardDescription>Günlük değişen HIBP aralığı sayısı (son 14 gün)</CardDescription>
-              </div>
-              <Badge variant="outline">Örnek veri</Badge>
-            </CardHeader>
-            <CardContent>
-              <UpdatesAreaChart data={DEMO_UPDATE_HISTORY} />
-            </CardContent>
-          </Card>
-          <div className="lg:col-span-2">
-            <DatasetStatusCard status={status} loading={loading} />
-          </div>
+            {state.kind === "loading" && (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <CheckSkeleton />
+              </motion.div>
+            )}
+
+            {state.kind === "error" && (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                <ApiOfflineCard onRetry={() => setState({ kind: "idle" })} />
+              </motion.div>
+            )}
+
+            {state.kind === "result" && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                <ResultSummary result={state.data} />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Uyumluluk Özeti</CardTitle>
+                    <CardDescription>Standart başına karşılanan gereksinim oranı</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <RegulationBar regulations={state.data.regulations} />
+                  </CardContent>
+                </Card>
+
+                <RegulationGrid regulations={state.data.regulations} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
-    </PageShell>
+      </motion.main>
+    </>
   );
 }

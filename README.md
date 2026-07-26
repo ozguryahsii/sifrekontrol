@@ -79,10 +79,15 @@ makine dışına çıkmaz.
 
 Stack: Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui tarzı komponent
 mimarisi + Motion animasyonları + Lucide ikonları + Recharts grafikleri.
-Dark mode öncelikli, light tema desteklidir. Ekranlar: Genel Bakış (KPI +
-güncelleme aktivitesi + veri seti durumu), Şifre Analizi (gauge, sızıntı
-sayacı, kırılma süreleri, standart bazlı uyumluluk kartları) ve Veri Seti
-(yaşam döngüsü + CLI komutları).
+Dark mode öncelikli, light tema desteklidir.
+
+Sayfa düzeni:
+
+- `/` — son kullanıcı için sadeleştirilmiş **Şifre Analizi** ana sayfası
+  (menüsüz; gauge, sızıntı sayacı, kırılma süreleri, uyumluluk kartları).
+- `/admin` — yönetim paneli (ana sayfadan bağlantı verilmez, adres manuel
+  girilir): Genel Bakış (KPI + güncelleme aktivitesi + veri seti durumu).
+- `/admin/dataset` — Veri Seti yönetimi (yaşam döngüsü + CLI komutları).
 
 Veri dizini varsayılan olarak `~/.local/share/sifrekontrol`'dür;
 `--data-dir` veya `SIFREKONTROL_DATA` ortam değişkeni ile değiştirilebilir.

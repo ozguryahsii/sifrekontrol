@@ -6,15 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "./theme-toggle";
 
 const TITLES: Record<string, { title: string; subtitle: string }> = {
-  "/": {
+  "/admin": {
     title: "Genel Bakış",
     subtitle: "Veri seti durumu ve güvenlik özetiniz",
   },
-  "/check": {
-    title: "Şifre Analizi",
-    subtitle: "Güç, sızıntı ve regülasyon uyumluluğu denetimi",
-  },
-  "/dataset": {
+  "/admin/dataset": {
     title: "Veri Seti",
     subtitle: "HIBP offline veri seti yönetimi ve güncelleme",
   },
@@ -22,7 +18,7 @@ const TITLES: Record<string, { title: string; subtitle: string }> = {
 
 export function Navbar() {
   const pathname = usePathname();
-  const { title, subtitle } = TITLES[pathname] ?? TITLES["/"];
+  const { title, subtitle } = TITLES[pathname] ?? TITLES["/admin"];
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 glass">

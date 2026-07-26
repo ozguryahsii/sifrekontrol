@@ -14,9 +14,9 @@ import { cn } from "@/lib/utils";
 import { StatusDot } from "@/components/ui/status-dot";
 
 const NAV = [
-  { href: "/", label: "Genel Bakış", icon: LayoutDashboard },
-  { href: "/check", label: "Şifre Analizi", icon: ScanSearch },
-  { href: "/dataset", label: "Veri Seti", icon: Database },
+  { href: "/admin", label: "Genel Bakış", icon: LayoutDashboard },
+  { href: "/admin/dataset", label: "Veri Seti", icon: Database },
+  { href: "/", label: "Şifre Analizi", icon: ScanSearch },
 ] as const;
 
 export function Sidebar() {
@@ -31,7 +31,7 @@ export function Sidebar() {
         </div>
         <div>
           <div className="text-sm font-bold tracking-tight">sifrekontrol</div>
-          <div className="text-[11px] text-muted-foreground">Password Security Suite</div>
+          <div className="text-[11px] text-muted-foreground">Yönetim Paneli</div>
         </div>
       </div>
 
