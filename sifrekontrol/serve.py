@@ -67,6 +67,12 @@ PAGE = """<!DOCTYPE html>
 </style>
 </head>
 <body>
+<p style="border:1px solid #8886;border-radius:10px;padding:.6rem .9rem;
+   font-size:.85rem;background:rgba(120,120,255,.08)">
+ℹ️ Bu sayfa, analiz motorunun <b>yedek basit arayüzüdür</b>. Modern dashboard
+için <a href="http://localhost:3002">http://localhost:3002</a> adresini açın
+(frontend dizininde <code>npm run dev</code> çalışıyor olmalı).
+</p>
 <h1>🔐 sifrekontrol</h1>
 <p class="privacy">Tamamen lokal çalışır: şifreniz yalnızca bu makinedeki analize gider
 (127.0.0.1), hiçbir yerde saklanmaz, loglanmaz, internete gönderilmez.</p>
